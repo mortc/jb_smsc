@@ -70,12 +70,12 @@ usa.loc[usa.STUSPS=='AK'].plot(ax=ax1,linewidth=0.5, edgecolor='grey', color='wh
 usa.loc[usa.STUSPS!='AK'].plot(ax=ax2,linewidth=0.5, edgecolor='grey', color='whitesmoke', alpha = 0.8)
 gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,c = 'grey',markersize = 2)
 gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,c = 'grey',markersize = 2)
-gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,column = 'anom',cmap = 'bwr',markersize = 0.75,vmin = -100,vmax = 100)
-gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,column = 'anom',cmap = 'bwr',markersize = 0.75,vmin = -100,vmax = 100)
+gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = -100,vmax = 100)
+gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = -100,vmax = 100)
 ax1.set_xlim([-180,-130]),ax2.set_xlim([-125,-100])
 cbar_ax = fig.add_axes([0.14, 0.12, 0.3, 0.04])
 norm = mpl.colors.Normalize(vmin=-100, vmax=100)
-sm = plt.cm.ScalarMappable(cmap='bwr', norm=norm)
+sm = plt.cm.ScalarMappable(cmap='bwr_r', norm=norm)
 sm.set_array([])
 plt.colorbar(sm, cax = cbar_ax,ticks=np.linspace(-100, 100, 5).round(0),
     orientation = 'horizontal',extend = 'both',label = 'SWE anom. (mm)')#, label = 'FMA obs'
