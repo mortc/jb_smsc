@@ -1,4 +1,7 @@
 # jb_smsc
+
+### SNOTEL 1 April anomalies
+
 Compute 1 April 2024 SWE anomalies relative to 1991 - 2020 from SNOTEL data.
 
 Identify sites and years when SWE == 0. (no action taken other than identification)
