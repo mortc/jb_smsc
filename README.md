@@ -12,6 +12,14 @@ It includes some code for an ugly map. The map only displays sites with observat
 
 The SNOTEL data used are directly from NRCS (i.e. not the BCQC dataset). These data will soon be included in v2 of https://zenodo.org/records/10287093 , which should make it easier to reference.
 
+### BCAB 1 April 2024 anomalies
+
+Same as SNOTEL but for BCAB snow pillows and uses CanSWEv6 to derive the 1991-2020 climatologies.
+
+There are very few sites with valid SWE obs in all 30yrs so a better cuttoff is probably 25yrs.
+
+Ugly map includes SNOTEL but revised to sites with at least 25yrs of observations.
+
 
 ### .csv output [1April2024_SNOTEL_anom.csv]
 time: 1 April 2024
@@ -21,8 +29,6 @@ station_id: SNOTEL sation ID appended to 'SNOTEL_'
 station_name: SNOTEL station name
 
 snw: 1 April 2024 snow water equivalent, units = mm or kg/m-2
-
-snd: 1 April 2024 snow depth, units = m
 
 lat: station latitude, degrees North, from SNOTEL metadata
 
