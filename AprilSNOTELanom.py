@@ -51,7 +51,7 @@ df_zeroes = df0.groupby(['station_id']).apply(get_unique).reset_index().rename(c
 df_apr = pd.merge(apr1,df_zeroes,on = 'station_id',how = 'left')
 
 # save
-df_apr.to_csv(f'{sitestore}jb_smsc/1Apil2024_SNOTEL_anom.csv',index=False)
+df_apr.drop(['snd'],axis=1).to_csv(f'{sitestore}jb_smsc/1Apil2024_SNOTEL_anom.csv',index=False)
 
 # map anoms for sites with obs in all yrs (ugly map)
 from matplotlib import pyplot as plt 
