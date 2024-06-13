@@ -35,7 +35,8 @@ apr_info = pd.merge(apr9120[['station_id','elevation','clm']],apr9120c[['station
 apr1 = pd.merge(df2024.loc[(df2024.time.dt.year==2024)],apr_info,on='station_id')
 
 # compute anom as 2024 minus 30yr climatology
-apr1['anom'] = apr1.snw - apr1.clm # 3 have nan swe
+apr1['anom'] = apr1.snw - apr1.clm 
+apr1['anom_pct'] = np.int16(np.round((apr1.anom/apr1.clm)*100,0))
 
 # check zeroes
 # identify instances in the 30yr climatology where swe == 0 on 1 april.
@@ -72,16 +73,16 @@ snt = to_gdf(pd.read_csv(f'{sitestore}jb_smsc/1Apil2024_SNOTEL_anom.csv'),'lat',
 
 n = 25 # minimum number of years with valid SWE obs
 # swe anom limits for plotting
-smin = -200 
-smax = 200
+smin = -100 
+smax = 100
 
 fig, ax = plt.subplots(nrows = 1, ncols = 1)
 ax1 = ax
 nam.plot(ax=ax,linewidth=0.5, edgecolor='grey', color='whitesmoke', alpha = 0.8)
 apr1_gdf.loc[apr1_gdf.nyrs>=n].plot(ax = ax1,c = 'grey',markersize = 2)
 snt.loc[snt.nyrs>=n].plot(ax = ax1,c = 'grey',markersize = 2)
-apr1_gdf.loc[apr1_gdf.nyrs>=n].plot(ax = ax1,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
-snt.loc[snt.nyrs>=n].plot(ax = ax1,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
+apr1_gdf.loc[apr1_gdf.nyrs>=n].plot(ax = ax1,column = 'anom_pct',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
+snt.loc[snt.nyrs>=n].plot(ax = ax1,column = 'anom_pct',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
 ax1.set_xlim([-176,-100])
 ax1.set_ylim([27,74])
 ax1.set_title(f'1 April 2024 SWE anomaly relative to 1991-2020\nSites with min {n}yrs during 1991-2020 shown')
@@ -91,7 +92,7 @@ norm = mpl.colors.Normalize(vmin=smin, vmax=smax)
 sm = plt.cm.ScalarMappable(cmap='bwr_r', norm=norm)
 sm.set_array([])
 plt.colorbar(sm, cax = cbar_ax,ticks=np.linspace(smin, smax, 5).round(0),
-    orientation = 'horizontal',extend = 'both',label = 'SWE anom. (mm)')
+    orientation = 'horizontal',extend = 'both',label = 'SWE anom. (%)')
 
 fig.savefig(f'{sitestore}jb_smsc/1Apr2024anom_NA_{n}yrs.png')
 plt.close()
