@@ -32,6 +32,7 @@ apr1 = pd.merge(apr.loc[(apr.time.dt.year==2024)],apr_info,on='station_id')
 
 # compute anom as 2024 minus 30yr climatology
 apr1['anom'] = apr1.snw - apr1.clm
+apr1['anom_pct'] = np.int16(np.round((apr1.anom/apr1.clm)*100,0))
 
 # check zeroes
 # identify instances in the 30yr climatology where swe == 0 on 1 april.
@@ -64,23 +65,29 @@ usa = gp.read_file(f'{sitestore}shapefiles/US/cb_2018_us_state_20m/cb_2018_us_st
 usa = usa.loc[~usa.STUSPS.isin(['HI','PR'])]
 conus = usa.loc[~usa.STUSPS.isin(['AK','HI','PR'])]
 
+# number of years a site needs to have data to be plotted
+n = 25
+# max/min limits
+smin = -100
+smax = 100
+
 fig, ax = plt.subplots(nrows = 1, ncols = 2)
 ax1,ax2 = ax
 usa.loc[usa.STUSPS=='AK'].plot(ax=ax1,linewidth=0.5, edgecolor='grey', color='whitesmoke', alpha = 0.8)
 usa.loc[usa.STUSPS!='AK'].plot(ax=ax2,linewidth=0.5, edgecolor='grey', color='whitesmoke', alpha = 0.8)
 gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,c = 'grey',markersize = 2)
 gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,c = 'grey',markersize = 2)
-gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = -100,vmax = 100)
-gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,column = 'anom',cmap = 'bwr_r',markersize = 0.75,vmin = -100,vmax = 100)
+gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,column = 'anom_pct',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
+gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,column = 'anom_pct',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
 ax1.set_xlim([-180,-130]),ax2.set_xlim([-125,-100])
 cbar_ax = fig.add_axes([0.14, 0.12, 0.3, 0.04])
 norm = mpl.colors.Normalize(vmin=-100, vmax=100)
 sm = plt.cm.ScalarMappable(cmap='bwr_r', norm=norm)
 sm.set_array([])
-plt.colorbar(sm, cax = cbar_ax,ticks=np.linspace(-100, 100, 5).round(0),
-    orientation = 'horizontal',extend = 'both',label = 'SWE anom. (mm)')#, label = 'FMA obs'
+plt.colorbar(sm, cax = cbar_ax,ticks=np.linspace(smin, smax, 5).round(0),
+    orientation = 'horizontal',extend = 'both',label = 'SWE anom. (%)')#, label = 'FMA obs'
 title_ax = fig.add_axes([0.12, 0.75, 0.5, 0.5])
 title_ax.text(0,0, 'SNOTEL 1 April 2024 SWE\nanomaly relative to\n1991 - 2020')
 title_ax.axis('off')
-fig.savefig(f'{sitestore}jb_smsc/test.png')
+fig.savefig(f'{sitestore}jb_smsc/SNOTEL_1April2024_anom.png')
 plt.close()
