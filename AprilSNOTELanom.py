@@ -81,7 +81,7 @@ gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS=='AK'],how = 'inner').plot(ax = ax1,column 
 gp.sjoin(apr1_gdf,usa.loc[usa.STUSPS!='AK'],how = 'inner').plot(ax = ax2,column = 'anom_pct',cmap = 'bwr_r',markersize = 0.75,vmin = smin,vmax = smax)
 ax1.set_xlim([-180,-130]),ax2.set_xlim([-125,-100])
 cbar_ax = fig.add_axes([0.14, 0.12, 0.3, 0.04])
-norm = mpl.colors.Normalize(vmin=-100, vmax=100)
+norm = mpl.colors.Normalize(vmin=smin, vmax=smax)
 sm = plt.cm.ScalarMappable(cmap='bwr_r', norm=norm)
 sm.set_array([])
 plt.colorbar(sm, cax = cbar_ax,ticks=np.linspace(smin, smax, 5).round(0),
